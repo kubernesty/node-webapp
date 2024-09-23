@@ -15,11 +15,5 @@ pipeline {
         sh 'npm install'
       }
     }
-    stage('Docker Build') {
-      agent any
-      steps {
-        sh 'docker build -t node:lts-slim .'
-      }
-    }
   }
 }

@@ -1,16 +1,17 @@
 pipeline {
     agent {
-	label 'linux-node'
-}
-
-    stages {
-        stage ('Build') {
-            steps {
-                script {
-                    git credentialsID: 'kubernesty' url: 'https://github.com/kubernesty/node-webapp.git'
-                    def dockerImage = docker.build('node:lts-slim')
-                }
-            }
-        }
+       label 'linux-node'
     }
+	stages {
+		stage('Build') {
+		    steps {
+		        script {
+                            git credentialsId: 'git', 
+                            url: 'https://github.com/kubernesty/node-webapp.git', 
+                            branch 'main'
+                            def dockerImage = docker.build('node-docker')
+		        }
+		    }
+		}
+	}
 }

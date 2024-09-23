@@ -1,17 +1,25 @@
+#!groovy
+
 pipeline {
-    agent {
-       label 'linux-node'
+  agent {
+      label 'linux-node'
+  }
+  stages {
+    stage('NPM Install') {
+      agent {
+        docker {
+          image 'node:lts-slim'
+        }
+      }
+      steps {
+        sh 'npm install'
+      }
     }
-	stages {
-		stage('Build') {
-		    steps {
-		        script {
-                            git credentialsId: 'git', 
-                            url: 'https://github.com/kubernesty/node-webapp.git', 
-                            branch 'main'
-                            def dockerImage = docker.build('node-docker')
-		        }
-		    }
-		}
-	}
+    stage('Docker Build') {
+      agent any
+      steps {
+        sh 'docker build -t node:lts-slim .'
+      }
+    }
+  }
 }

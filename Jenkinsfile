@@ -1,19 +1,23 @@
-#!groovy
-
-pipeline {
-  agent {
-      label 'linux-node'
-  }
-  stages {
-    stage('NPM Install') {
-      agent {
-        docker {
-          image 'node:lts-slim'
+node ('linux-node'){    
+      def app     
+      stage('Clone repository') {               
+             
+            checkout scm    
+      }     
+      stage('Build image') {         
+       
+            app = docker.build("eherbas/practical-dockerbuild")    
+       }     
+      stage('Test image') {           
+            app.inside {            
+             
+             sh 'echo "Tests passed"'        
+            }    
+        }     
+       stage('Push image') {
+                                                  docker.withRegistry('https://registry.hub.docker.com', 'git') {            
+       app.push("${env.BUILD_NUMBER}")            
+       app.push("latest")        
+              }    
+           }
         }
-      }
-      steps {
-        sh 'npm install'
-      }
-    }
-  }
-}

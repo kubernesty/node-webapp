@@ -1,4 +1,4 @@
-FROM node:lts-slim as node
+FROM node:lts-slim
 
 RUN mkdir -p /home/node/app
 
